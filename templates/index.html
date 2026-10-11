@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="csrf-token" content="{{ csrf_token }}" />
+  <title>ATX</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css" />
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div id="toast-root"></div>
+  <div class="container">
+
+    <!-- ============ HOME ============ -->
+    <section id="view-home" class="view active">
+      <header class="header">
+        <div class="logo">ATX</div>
+        <h1>ATXxKEEM HUB</h1>
+        <p class="subtitle">ATXxKEEM HUB.</p>
+        <div class="user-chip" id="userChip" style="display:none;">
+          <span id="userChipName">user</span>
+          <button class="btn-link" id="logoutBtn">Logout</button>
+          <button class="btn-link" id="themeToggle">☾</button>
+        </div>
+      </header>
+
+      <div class="menu-grid">
+        <button class="menu-btn" data-nav="premium">
+          <span class="menu-icon">★</span>
+          <span class="menu-label">Buy Premium</span>
+          <span class="menu-sub">Script no key</span>
+        </button>
+        <button class="menu-btn" data-nav="pastebin">
+          <span class="menu-icon">&lt;/&gt;</span>
+          <span class="menu-label">ATX Pastebin</span>
+          <span class="menu-sub">Share code fast</span>
+        </button>
+        <button class="menu-btn" data-nav="script">
+          <span class="menu-icon">⌘</span>
+          <span class="menu-label">Get Script</span>
+          <span class="menu-sub">Free script with key system</span>
+        </button>
+        <button class="menu-btn" data-nav="key">
+          <span class="menu-icon">⚿</span>
+          <span class="menu-label">Get Key</span>
+          <span class="menu-sub">12h access</span>
+        </button>
+        <button class="menu-btn" data-nav="apikeys" id="apiTokenBtn" style="display:none;">
+          <span class="menu-icon">⌗</span>
+          <span class="menu-label">API Access</span>
+          <span class="menu-sub">Tokens for scripts</span>
+        </button>
+        <button class="menu-btn admin-only" data-nav="admin" style="display:none;">
+          <span class="menu-icon">⚙</span>
+          <span class="menu-label">Admin Panel</span>
+          <span class="menu-sub">Control panel</span>
+        </button>
+      </div>
+
+      <footer class="footer">
+        <p>ATX | Telegram: @AntraxdevZ</p>
+      </footer>
+    </section>
+
+    <!-- ============ KEY ============ -->
+    <section id="view-key" class="view">
+      <button class="back-btn" data-nav="home">← Back</button>
+      <header class="header small">
+        <div class="logo">ATX</div>
+        <h1>Key Generation</h1>
+        <p class="subtitle">Complete all tasks to receive your key</p>
+      </header>
+
+      <div class="steps">
+        <div class="step" id="keyStep1">
+          <div class="step-header">
+            <span class="step-number">01</span>
+            <span class="step-title">Join Telegram Channel</span>
+            <span class="step-status" id="keyStatus1">Pending</span>
+          </div>
+          <div class="step-body">
+            <p class="step-desc">Join our Telegram channel to receive updates and support.</p>
+            <a href="{{ telegram_channel }}" target="_blank" rel="noopener" class="btn" id="keyJoinBtn">Join Channel</a>
+            <div class="cooldown" id="keyCool1" style="display:none;">
+              <div class="cooldown-bar"><div class="cooldown-fill" id="keyFill1"></div></div>
+              <span class="cooldown-text" id="keyCoolText1">Wait 30s...</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step disabled" id="keyStep2">
+          <div class="step-header">
+            <span class="step-number">02</span>
+            <span class="step-title">Verify You Are Human</span>
+            <span class="step-status" id="keyStatus2">Locked</span>
+          </div>
+          <div class="step-body">
+            <p class="step-desc">Answer the challenge below to prove you are human.</p>
+            <div class="captcha-box" id="keyCaptchaBox" style="display:none;">
+              <div class="captcha-question" id="keyCaptchaQuestion">Loading...</div>
+              <div class="captcha-input-row">
+                <input type="text" id="keyCaptchaInput" class="captcha-input" placeholder="Your answer" autocomplete="off" />
+                <button class="btn" id="keyCaptchaSubmit">Submit</button>
+              </div>
+              <div class="captcha-error" id="keyCaptchaError" style="display:none;"></div>
+              <button class="btn-link" id="keyNewChallenge">Get new challenge</button>
+            </div>
+            <button class="btn" id="keyStartVerify">Start Verification</button>
+            <div class="cooldown" id="keyCool2" style="display:none;">
+              <div class="cooldown-bar"><div class="cooldown-fill" id="keyFill2"></div></div>
+              <span class="cooldown-text" id="keyCoolText2">Wait 30s...</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step disabled" id="keyStep3">
+          <div class="step-header">
+            <span class="step-number">03</span>
+            <span class="step-title">Generate Your Key</span>
+            <span class="step-status" id="keyStatus3">Locked</span>
+          </div>
+          <div class="step-body">
+            <p class="step-desc">Click below to receive your key.</p>
+            <button class="btn" id="keyGenBtn" disabled>Generate Key</button>
+            <div class="key-display" id="keyDisplay" style="display:none;">
+              <div class="key-label">Your Key</div>
+              <div class="key-value" id="keyValue">ATX-XXX-XXXX-XXXX</div>
+              <button class="btn-small" id="keyCopyBtn">Copy</button>
+              <div class="key-note" id="keyNote"></div>
+            </div>
+            <div class="error-msg" id="keyError" style="display:none;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SCRIPT ============ -->
+    <section id="view-script" class="view">
+      <button class="back-btn" data-nav="home">← Back</button>
+      <header class="header small">
+        <div class="logo">ATX</div>
+        <h1>Script Delivery</h1>
+        <p class="subtitle">Complete all tasks to receive your script</p>
+      </header>
+
+      <div class="steps">
+        <div class="step" id="scStep1">
+          <div class="step-header">
+            <span class="step-number">01</span>
+            <span class="step-title">Join Telegram Channel</span>
+            <span class="step-status" id="scStatus1">Pending</span>
+          </div>
+          <div class="step-body">
+            <p class="step-desc">Join our Telegram channel to receive updates and support.</p>
+            <a href="{{ telegram_channel }}" target="_blank" rel="noopener" class="btn" id="scJoinBtn">Join Channel</a>
+            <div class="cooldown" id="scCool1" style="display:none;">
+              <div class="cooldown-bar"><div class="cooldown-fill" id="scFill1"></div></div>
+              <span class="cooldown-text" id="scCoolText1">Wait 30s...</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step disabled" id="scStep2">
+          <div class="step-header">
+            <span class="step-number">02</span>
+            <span class="step-title">Verify You Are Human</span>
+            <span class="step-status" id="scStatus2">Locked</span>
+          </div>
+          <div class="step-body">
+            <p class="step-desc">Answer the challenge below to prove you are human.</p>
+            <div class="captcha-box" id="scCaptchaBox" style="display:none;">
+              <div class="captcha-question" id="scCaptchaQuestion">Loading...</div>
+              <div class="captcha-input-row">
+                <input type="text" id="scCaptchaInput" class="captcha-input" placeholder="Your answer" autocomplete="off" />
+                <button class="btn" id="scCaptchaSubmit">Submit</button>
+              </div>
+              <div class="captcha-error" id="scCaptchaError" style="display:none;"></div>
+              <button class="btn-link" id="scNewChallenge">Get new challenge</button>
+            </div>
+            <button class="btn" id="scStartVerify">Start Verification</button>
+            <div class="cooldown" id="scCool2" style="display:none;">
+              <div class="cooldown-bar"><div class="cooldown-fill" id="scFill2"></div></div>
+              <span class="cooldown-text" id="scCoolText2">Wait 30s...</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step disabled" id="scStep3">
+          <div class="step-header">
+            <span class="step-number">03</span>
+            <span class="step-title">Get Your Script</span>
+            <span class="step-status" id="scStatus3">Locked</span>
+          </div>
+          <div class="step-body">
+            <p class="step-desc">Click below to receive your loadstring. Signed TTL — expires in 7 days.</p>
+            <button class="btn" id="scGenBtn" disabled>Generate Script</button>
+            <div class="key-display" id="scDisplay" style="display:none;">
+              <div class="key-label">Loadstring</div>
+              <pre class="code-block" id="scPayload"></pre>
+              <button class="btn-small" id="scCopyBtn">Copy</button>
+            </div>
+            <div class="error-msg" id="scError" style="display:none;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ API TOKENS ============ -->
+    <section id="view-apikeys" class="view">
+      <button class="back-btn" data-nav="home">← Back</button>
+      <header class="header small">
+        <div class="logo">ATX</div>
+        <h1>API Access</h1>
+        <p class="subtitle">Tokens let scripts and tools call the API</p>
+      </header>
+      <div class="admin-card">
+        <div class="admin-section-title">Your API Token</div>
+        <p class="admin-desc">Send as <code>Authorization: Bearer &lt;token&gt;</code> on any /api request.</p>
+        <div class="key-display" id="apiTokenDisplay" style="display:none;">
+          <div class="key-value" id="apiTokenValue" style="font-size:13px;"></div>
+        </div>
+        <div class="admin-row" style="margin-top:16px;">
+          <button class="btn" id="apiTokenGenBtn">Generate Token</button>
+          <button class="btn-link" id="apiTokenRevokeBtn">Revoke</button>
+          <button class="btn-small" id="apiTokenCopyBtn" style="display:none;margin-top:0;">Copy</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ADMIN ============ -->
+    <section id="view-admin" class="view">
+      <button class="back-btn" data-nav="home">← Back</button>
+      <header class="header small">
+        <div class="logo">ATX</div>
+        <h1>Admin Panel</h1>
+        <p class="subtitle">Control the platform</p>
+      </header>
+
+      <div class="admin-tabs">
+        <button class="paste-tab active" data-atab="payloads">Payloads</button>
+        <button class="paste-tab" data-atab="keys">Keys</button>
+        <button class="paste-tab" data-atab="users">Users</button>
+        <button class="paste-tab" data-atab="blacklist">Blacklist</button>
+        <button class="paste-tab" data-atab="stats">Stats</button>
+        <button class="paste-tab" data-atab="audit">Audit</button>
+      </div>
+
+      <!-- payloads tab -->
+      <div class="paste-panel" id="atab-payloads">
+        <div class="admin-card">
+          <div class="admin-section-title">Script Payloads (per tier)</div>
+          <p class="admin-desc">Each tier gets its own script URL. Keys route based on their tier.</p>
+          <div id="payloadInputs"></div>
+
+          <div class="admin-section-title" style="margin-top:24px;">Key Durations (hours)</div>
+          <div id="durationInputs"></div>
+
+          <div class="admin-row" style="margin-top:16px;">
+            <button class="btn" id="adminSaveAllBtn">Save All</button>
+            <button class="btn-link" id="adminReloadBtn">Reload</button>
+          </div>
+          <div class="error-msg" id="adminPayloadError" style="display:none;"></div>
+          <div class="admin-success" id="adminPayloadSuccess" style="display:none;">Saved.</div>
+        </div>
+      </div>
+
+      <!-- keys tab -->
+      <div class="paste-panel" id="atab-keys" style="display:none;">
+        <div class="admin-card">
+          <div class="admin-row">
+            <select id="adminKeyTier" class="captcha-input" style="flex:1;">
+              <option value="free">free</option>
+              <option value="premium">premium</option>
+              <option value="vip">vip</option>
+            </select>
+            <button class="btn" id="adminGenKeyBtn">Generate</button>
+            <button class="btn-link" id="adminRefreshKeys">Refresh</button>
+          </div>
+          <div id="adminKeysList" class="paste-list" style="margin-top:16px;"></div>
+        </div>
+      </div>
+
+      <!-- users tab -->
+      <div class="paste-panel" id="atab-users" style="display:none;">
+        <div class="admin-card">
+          <div class="admin-row" style="margin-bottom:12px;">
+            <button class="btn-link" id="adminRefreshUsers">Refresh</button>
+          </div>
+          <div id="adminUsersList" class="paste-list"></div>
+        </div>
+      </div>
+
+      <!-- blacklist tab -->
+      <div class="paste-panel" id="atab-blacklist" style="display:none;">
+        <div class="admin-card">
+          <div class="admin-section-title">Blacklist</div>
+          <p class="admin-desc">Block specific keys or HWIDs from validating. Blacklisted keys are also revoked.</p>
+          <div class="admin-row">
+            <select id="blKind" class="captcha-input" style="flex:0 0 140px;">
+              <option value="keys">Key</option>
+              <option value="hwids">HWID</option>
+            </select>
+            <input type="text" id="blValue" class="captcha-input" placeholder="value" />
+            <button class="btn" id="blAddBtn">Add</button>
+          </div>
+          <div id="blList" style="margin-top:16px;"></div>
+        </div>
+      </div>
+
+      <!-- stats tab -->
+      <div class="paste-panel" id="atab-stats" style="display:none;">
+        <div class="admin-card">
+          <div class="admin-section-title">Totals</div>
+          <div id="statsTotals" class="paste-list"></div>
+          <div class="admin-section-title" style="margin-top:24px;">Last 14 days</div>
+          <canvas id="statsChart" height="140"></canvas>
+        </div>
+      </div>
+
+      <!-- audit tab -->
+      <div class="paste-panel" id="atab-audit" style="display:none;">
+        <div class="admin-card">
+          <div class="admin-row" style="margin-bottom:12px;">
+            <button class="btn-link" id="adminRefreshAudit">Refresh</button>
+          </div>
+          <div id="auditList" class="paste-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PASTEBIN ============ -->
+    <section id="view-pastebin" class="view">
+      <button class="back-btn" data-nav="home">← Back</button>
+
+      <div id="pasteAuth" style="display:none;">
+        <header class="header small">
+          <div class="logo">ATX</div>
+          <h1 id="authTitle">Login</h1>
+          <p class="subtitle" id="authSub">Sign in to use ATX Pastebin</p>
+        </header>
+        <div class="auth-card">
+          <div class="auth-toggle">
+            <button class="auth-tab active" data-mode="login">Login</button>
+            <button class="auth-tab" data-mode="register">Register</button>
+          </div>
+          <input type="text" id="authUser" class="captcha-input" placeholder="Username" autocomplete="username" />
+          <input type="password" id="authPass" class="captcha-input" placeholder="Password" autocomplete="current-password" style="margin-top:10px;" />
+          <input type="text" id="authRef" class="captcha-input" placeholder="Referral code (optional)" style="margin-top:10px; display:none;" />
+          <button class="btn" id="authSubmit" style="margin-top:16px; width:100%;">Login</button>
+          <div class="error-msg" id="authError" style="display:none;"></div>
+        </div>
+      </div>
+
+      <div id="pasteMain" style="display:none;">
+        <header class="header small">
+          <div class="logo">ATX</div>
+          <h1>ATX Pastebin</h1>
+          <p class="subtitle">Signed in as <span id="pasteUser">user</span></p>
+        </header>
+
+        <div class="paste-tabs">
+          <button class="paste-tab active" data-tab="new">New Paste</button>
+          <button class="paste-tab" data-tab="mine">My Pastes</button>
+          <button class="paste-tab" data-tab="recent">Recent</button>
+          <button class="paste-tab" data-tab="search">Search</button>
+        </div>
+
+        <div class="paste-panel" id="pastePanelNew">
+          <input type="text" id="pasteTitle" class="captcha-input" placeholder="Title (optional)" maxlength="120" />
+          <textarea id="pasteContent" class="paste-textarea" placeholder="Paste your code or text here..." maxlength="100000"></textarea>
+          <div class="paste-preview-label">Live preview</div>
+          <pre class="code-block" id="pastePreview"><code></code></pre>
+          <div class="paste-row">
+            <select id="pasteSyntax" class="captcha-input" style="flex:0 0 160px;">
+              <option value="text">Plain text</option>
+              <option value="lua">Lua</option>
+              <option value="javascript">JavaScript</option>
+              <option value="python">Python</option>
+              <option value="html">HTML</option>
+              <option value="css">CSS</option>
+              <option value="json">JSON</option>
+              <option value="cpp">C++</option>
+              <option value="csharp">C#</option>
+              <option value="bash">Bash</option>
+            </select>
+            <select id="pasteExpiry" class="captcha-input" style="flex:0 0 140px;">
+              <option value="never">Never expires</option>
+              <option value="1h">1 hour</option>
+              <option value="1d">1 day</option>
+              <option value="7d">7 days</option>
+              <option value="30d">30 days</option>
+            </select>
+            <input type="password" id="pastePassword" class="captcha-input" placeholder="Password (optional)" />
+          </div>
+          <div class="paste-row">
+            <button class="btn" id="pasteCreateBtn" style="flex:1;">Create Paste</button>
+          </div>
+          <div class="error-msg" id="pasteError" style="display:none;"></div>
+          <div class="key-display" id="pasteResult" style="display:none;">
+            <div class="key-label">Paste URL</div>
+            <div class="key-value" id="pasteResultUrl">/paste/xxxx</div>
+            <button class="btn-small" id="pasteResultCopy">Copy</button>
+            <div class="key-label" style="margin-top:14px;">Raw URL</div>
+            <div class="key-value" id="pasteResultRawUrl">/raw/xxxx</div>
+            <button class="btn-small" id="pasteResultRawCopy">Copy Raw</button>
+            <div class="key-label" style="margin-top:14px;">Short Loader</div>
+            <div class="key-value" id="pasteResultShortUrl">/r/xxxx</div>
+            <button class="btn-small" id="pasteResultShortCopy">Copy Loader</button>
+          </div>
+        </div>
+
+        <div class="paste-panel" id="pastePanelMine" style="display:none;">
+          <div id="pasteMineList" class="paste-list"></div>
+        </div>
+
+        <div class="paste-panel" id="pastePanelRecent" style="display:none;">
+          <div id="pasteRecentList" class="paste-list"></div>
+        </div>
+
+        <div class="paste-panel" id="pastePanelSearch" style="display:none;">
+          <input type="text" id="pasteSearchInput" class="captcha-input" placeholder="Search title or content..." />
+          <div id="pasteSearchList" class="paste-list" style="margin-top:12px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PASTE VIEW ============ -->
+    <section id="view-paste-view" class="view">
+      <button class="back-btn" data-nav="pastebin">← Back</button>
+      <header class="header small">
+        <div class="logo">ATX</div>
+        <h1 id="pvTitle">Paste</h1>
+        <p class="subtitle" id="pvMeta">by anon • 0 views</p>
+      </header>
+      <div class="paste-view">
+        <div id="pvLocked" style="display:none;">
+          <input type="password" id="pvPassword" class="captcha-input" placeholder="Password required" />
+          <button class="btn" id="pvUnlockBtn" style="margin-top:12px;">Unlock</button>
+          <div class="error-msg" id="pvLockErr" style="display:none;"></div>
+        </div>
+        <div id="pvBody">
+          <div class="raw-url-box">
+            <span class="raw-url-label">RAW</span>
+            <code class="raw-url" id="pvRawUrl">/raw/xxxx</code>
+            <button class="btn-small" id="pvRawCopy">Copy URL</button>
+          </div>
+          <pre class="code-block"><code id="pvContent">Loading...</code></pre>
+          <div class="paste-view-actions">
+            <button class="btn-small" id="pvCopy">Copy</button>
+            <button class="btn-small" id="pvRaw">Open Raw</button>
+            <button class="btn-small" id="pvFork">Fork</button>
+            <button class="btn-small" id="pvEdit" style="display:none;">Edit</button>
+            <button class="btn-small" id="pvDelete" style="display:none;background:#2a0a0a;color:#f55;">Delete</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    // ========== CONFIG ==========
+    window.ATX = {
+      csrf: document.querySelector('meta[name="csrf-token"]').content,
+      preloadPasteId: "{{ paste_id or '' }}",
+    };
+
+    // patch fetch to auto-include CSRF
+    const _fetch = window.fetch;
+    window.fetch = function(url, opts={}) {
+      opts.headers = opts.headers || {};
+      if (typeof opts.headers === 'object' && !(opts.headers instanceof Headers)) {
+        if (!opts.headers['X-CSRF-Token']) opts.headers['X-CSRF-Token'] = window.ATX.csrf;
+      }
+      return _fetch(url, opts);
+    };
+
+    // ========== TOASTS ==========
+    function toast(msg, type='info') {
+      const root = document.getElementById('toast-root');
+      const el = document.createElement('div');
+      el.className = 'toast toast-' + type;
+      el.textContent = msg;
+      root.appendChild(el);
+      requestAnimationFrame(() => el.classList.add('show'));
+      setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 300); }, 2800);
+    }
+
+    // ========== THEME ==========
+    const themeBtn = document.getElementById('themeToggle');
+    const storedTheme = localStorage.getItem('atx-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', storedTheme);
+    themeBtn && themeBtn.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('atx-theme', next);
+      themeBtn.textContent = next === 'dark' ? '☾' : '☀';
+    });
+    themeBtn && (themeBtn.textContent = storedTheme === 'dark' ? '☾' : '☀');
+
+    // ========== VIEW ROUTER ==========
+    const views = document.querySelectorAll('.view');
+    function showView(id) {
+      views.forEach(v => v.classList.remove('active'));
+      document.getElementById('view-' + id)?.classList.add('active');
+      window.scrollTo(0, 0);
+    }
+    document.querySelectorAll('[data-nav]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const t = btn.dataset.nav;
+        if (t === 'premium') { window.open('{{ telegram_premium }}', '_blank', 'noopener'); return; }
+        if (t === 'pastebin') { handlePastebinNav(); return; }
+        if (t === 'admin') { if (!currentUser || !currentUser.is_admin) return; showView('admin'); loadAdminPayloads(); return; }
+        if (t === 'apikeys') { showView('apikeys'); refreshApiToken(); return; }
+        showView(t);
+      });
+    });
+
+    // ========== AUTH ==========
+    let currentUser = null;
+    async function loadMe() {
+      try {
+        const r = await fetch('/api/auth/me');
+        const d = await r.json();
+        currentUser = d.user;
+        if (d.csrf_token) window.ATX.csrf = d.csrf_token;
+        updateUserChip(); updateAdminVisibility();
+      } catch (e) { currentUser = null; }
+    }
+    function updateUserChip() {
+      const chip = document.getElementById('userChip');
+      if (currentUser) {
+        chip.style.display = 'inline-flex';
+        document.getElementById('userChipName').textContent =
+          currentUser.username + (currentUser.is_admin ? ' • admin' : '');
+      } else chip.style.display = 'none';
+      document.getElementById('apiTokenBtn').style.display = currentUser ? 'flex' : 'none';
+    }
+    function updateAdminVisibility() {
+      const show = !!(currentUser && currentUser.is_admin);
+      document.querySelectorAll('.admin-only').forEach(el => el.style.display = show ? 'flex' : 'none');
+    }
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      currentUser = null; updateUserChip(); updateAdminVisibility(); showView('home');
+    });
+    loadMe();
+
+    // ========== ADMIN PAYLOADS ==========
+    async function loadAdminPayloads() {
+      try {
+        const r = await fetch('/api/admin/payloads');
+        const d = await r.json();
+        if (!d.success) return;
+        const cont = document.getElementById('payloadInputs');
+        cont.innerHTML = '';
+        for (const tier of ['free','premium','vip']) {
+          const val = d.payloads[tier] || '';
+          const div = document.createElement('div');
+          div.className = 'paste-row';
+          div.innerHTML = `
+            <div style="flex:0 0 90px;font-size:12px;color:#888;text-transform:uppercase;letter-spacing:1px;">${tier}</div>
+            <input type="text" class="captcha-input" data-tier="${tier}" value="${val}" />
+          `;
+          cont.appendChild(div);
+        }
+        const dcont = document.getElementById('durationInputs');
+        dcont.innerHTML = '';
+        for (const tier of ['free','premium','vip']) {
+          const val = d.durations[tier] || 12;
+          const div = document.createElement('div');
+          div.className = 'paste-row';
+          div.innerHTML = `
+            <div style="flex:0 0 90px;font-size:12px;color:#888;text-transform:uppercase;letter-spacing:1px;">${tier}</div>
+            <input type="number" min="1" max="8760" class="captcha-input" data-durtier="${tier}" value="${val}" />
+          `;
+          dcont.appendChild(div);
+        }
+      } catch (e) { toast('Failed to load payloads', 'error'); }
+    }
+    document.getElementById('adminReloadBtn').addEventListener('click', loadAdminPayloads);
+    document.getElementById('adminSaveAllBtn').addEventListener('click', async () => {
+      const err = document.getElementById('adminPayloadError');
+      const ok = document.getElementById('adminPayloadSuccess');
+      err.style.display = 'none'; ok.style.display = 'none';
+      try {
+        const inputs = document.querySelectorAll('#payloadInputs input');
+        for (const inp of inputs) {
+          const tier = inp.dataset.tier;
+          const url = inp.value.trim();
+          if (!url) continue;
+          const r = await fetch('/api/admin/payloads', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ tier, url }),
+          });
+          const d = await r.json();
+          if (!d.success) throw new Error(d.error);
+        }
+        const dinputs = document.querySelectorAll('#durationInputs input');
+        for (const inp of dinputs) {
+          const tier = inp.dataset.durtier;
+          const hours = parseInt(inp.value);
+          const r = await fetch('/api/admin/durations', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ tier, hours }),
+          });
+          const d = await r.json();
+          if (!d.success) throw new Error(d.error);
+        }
+        ok.style.display = 'block';
+        toast('Saved', 'success');
+        setTimeout(() => ok.style.display = 'none', 2500);
+      } catch (e) { err.textContent = e.message; err.style.display = 'block'; }
+    });
+
+    // ========== ADMIN TABS ==========
+    document.querySelectorAll('.admin-tabs .paste-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.admin-tabs .paste-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.querySelectorAll('#view-admin .paste-panel').forEach(p => p.style.display = 'none');
+        document.getElementById('atab-' + tab.dataset.atab).style.display = 'block';
+        if (tab.dataset.atab === 'keys') loadAdminKeys();
+        if (tab.dataset.atab === 'users') loadAdminUsers();
+        if (tab.dataset.atab === 'blacklist') loadBlacklist();
+        if (tab.dataset.atab === 'stats') loadStats();
+        if (tab.dataset.atab === 'audit') loadAudit();
+      });
+    });
+
+    // ========== ADMIN KEYS ==========
+    async function loadAdminKeys() {
+      const list = document.getElementById('adminKeysList');
+      list.innerHTML = '<div class="paste-empty">Loading...</div>';
+      try {
+        const r = await fetch('/api/admin/keys');
+        const d = await r.json();
+        if (!d.success) { list.innerHTML = '<div class="paste-empty">Error</div>'; return; }
+        if (!d.keys.length) { list.innerHTML = '<div class="paste-empty">No keys yet</div>'; return; }
+        list.innerHTML = d.keys.map(k => `
+          <div class="paste-item">
+            <div class="paste-item-main">
+              <div class="paste-item-title" style="font-family:monospace;">${k.key}</div>
+              <div class="paste-item-meta">${k.tier} • ${k.active ? 'active' : 'expired'} • hwid: ${k.hwid || '—'} • created ${k.created ? new Date(k.created*1000).toLocaleString() : ''}</div>
+            </div>
+            <div class="paste-item-actions">
+              <button class="btn-small" data-revoke="${k.key}">Revoke</button>
+            </div>
+          </div>
+        `).join('');
+        list.querySelectorAll('[data-revoke]').forEach(b => b.addEventListener('click', async () => {
+          if (!confirm('Revoke this key?')) return;
+          await fetch('/api/admin/keys/revoke', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:b.dataset.revoke})});
+          toast('Revoked', 'success');
+          loadAdminKeys();
+        }));
+      } catch (e) { list.innerHTML = '<div class="paste-empty">Error</div>'; }
+    }
+    document.getElementById('adminRefreshKeys').addEventListener('click', loadAdminKeys);
+    document.getElementById('adminGenKeyBtn').addEventListener('click', async () => {
+      const tier = document.getElementById('adminKeyTier').value;
+      const r = await fetch('/api/admin/keys/gen', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tier})});
+      const d = await r.json();
+      if (d.success) { toast('Key: ' + d.key, 'success'); loadAdminKeys(); }
+      else toast(d.error || 'Error', 'error');
+    });
+
+    // ========== ADMIN USERS ==========
+    async function loadAdminUsers() {
+      const list = document.getElementById('adminUsersList');
+      list.innerHTML = '<div class="paste-empty">Loading...</div>';
+      const r = await fetch('/api/admin/users');
+      const d = await r.json();
+      if (!d.success) { list.innerHTML = '<div class="paste-empty">Error</div>'; return; }
+      list.innerHTML = d.users.map(u => `
+        <div class="paste-item">
+          <div class="paste-item-main">
+            <div class="paste-item-title">${u.username} ${u.is_admin?'★':''} ${u.is_banned?'(banned)':''}</div>
+            <div class="paste-item-meta">#${u.id} • ${u.paste_count} pastes • +${u.bonus_hours||0}h bonus</div>
+          </div>
+          <div class="paste-item-actions">
+            <button class="btn-small" data-act="ban" data-uid="${u.id}">${u.is_banned?'Unban':'Ban'}</button>
+            <button class="btn-small" data-act="role" data-uid="${u.id}" data-admin="${u.is_admin?1:0}">${u.is_admin?'Demote':'Promote'}</button>
+            <button class="btn-small" data-act="del" data-uid="${u.id}" style="background:#2a0a0a;color:#f55;">Delete</button>
+          </div>
+        </div>
+      `).join('');
+      list.querySelectorAll('[data-act]').forEach(b => b.addEventListener('click', async () => {
+        const uid = b.dataset.uid; const act = b.dataset.act;
+        let url = '';
+        if (act === 'ban') url = `/api/admin/users/${uid}/ban`;
+        if (act === 'role') url = b.dataset.admin === '1' ? `/api/admin/users/${uid}/demote` : `/api/admin/users/${uid}/promote`;
+        if (act === 'del') { if (!confirm('Delete user?')) return; url = `/api/admin/users/${uid}/delete`; }
+        const r = await fetch(url, {method:'POST'});
+        const d = await r.json();
+        if (d.success) { toast('OK', 'success'); loadAdminUsers(); }
+        else toast(d.error || 'Error', 'error');
+      }));
+    }
+    document.getElementById('adminRefreshUsers').addEventListener('click', loadAdminUsers);
+
+    // ========== BLACKLIST ==========
+    async function loadBlacklist() {
+      const r = await fetch('/api/admin/blacklist');
+      const d = await r.json();
+      const list = document.getElementById('blList');
+      const render = (kind, arr) => arr.map(v =>
+        `<div class="paste-item"><div class="paste-item-main"><div class="paste-item-title" style="font-family:monospace;">${v}</div><div class="paste-item-meta">${kind}</div></div><div class="paste-item-actions"><button class="btn-small" data-bl="${kind}:${v}">Remove</button></div></div>`
+      ).join('');
+      list.innerHTML = (render('key', d.keys||[]) + render('hwid', d.hwids||[])) || '<div class="paste-empty">Empty</div>';
+      list.querySelectorAll('[data-bl]').forEach(b => b.addEventListener('click', async () => {
+        const [k, v] = b.dataset.bl.split(':');
+        await fetch('/api/admin/blacklist/remove', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kind:k==='key'?'keys':'hwids', value:v})});
+        loadBlacklist();
+      }));
+    }
+    document.getElementById('blAddBtn').addEventListener('click', async () => {
+      const kind = document.getElementById('blKind').value;
+      const value = document.getElementById('blValue').value.trim();
+      if (!value) return;
+      await fetch('/api/admin/blacklist/add', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kind, value})});
+      document.getElementById('blValue').value = '';
+      loadBlacklist();
+    });
+
+    // ========== STATS ==========
+    let chartInstance = null;
+    async function loadStats() {
+      const r = await fetch('/api/admin/stats');
+      const d = await r.json();
+      const totals = document.getElementById('statsTotals');
+      totals.innerHTML = Object.entries(d.totals || {}).map(([k,v]) =>
+        `<div class="paste-item"><div class="paste-item-main"><div class="paste-item-title">${k}</div></div><div class="paste-item-actions"><span style="font-size:18px;font-weight:700;">${v}</span></div></div>`
+      ).join('') || '<div class="paste-empty">No data</div>';
+
+      const ctx = document.getElementById('statsChart');
+      if (chartInstance) chartInstance.destroy();
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: d.series.labels,
+          datasets: [
+            { label: 'Keys', data: d.series.keys_generated, borderColor: '#fff', tension: 0.3 },
+            { label: 'Validations', data: d.series.validations, borderColor: '#888', tension: 0.3 },
+            { label: 'Pastes', data: d.series.pastes_created, borderColor: '#4af', tension: 0.3 },
+            { label: 'Registrations', data: d.series.registrations, borderColor: '#f94', tension: 0.3 },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { labels: { color: '#ccc' } } },
+          scales: {
+            x: { ticks: { color: '#888' }, grid: { color: '#1a1a1a' } },
+            y: { ticks: { color: '#888' }, grid: { color: '#1a1a1a' } },
+          },
+        },
+      });
+    }
+
+    // ========== AUDIT ==========
+    async function loadAudit() {
+      const r = await fetch('/api/admin/audit');
+      const d = await r.json();
+      const list = document.getElementById('auditList');
+      if (!d.entries.length) { list.innerHTML = '<div class="paste-empty">Empty</div>'; return; }
+      list.innerHTML = d.entries.map(e => `
+        <div class="paste-item">
+          <div class="paste-item-main">
+            <div class="paste-item-title">${e.action}</div>
+            <div class="paste-item-meta">${new Date(e.ts*1000).toLocaleString()} • ${e.actor || '?'} • ${e.ip || ''} • ${JSON.stringify(e.detail||{})}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+    document.getElementById('adminRefreshAudit').addEventListener('click', loadAudit);
+
+    // ========== API TOKEN ==========
+    async function refreshApiToken() {
+      const r = await fetch('/api/auth/me');
+      const d = await r.json();
+      if (!d.user) return;
+      // fetch token via a hidden route: we don't return token in me for security.
+      // User must click Generate to fetch it once.
+    }
+    document.getElementById('apiTokenGenBtn').addEventListener('click', async () => {
+      const r = await fetch('/api/auth/apitoken', {method:'POST'});
+      const d = await r.json();
+      if (d.success) {
+        document.getElementById('apiTokenDisplay').style.display = 'block';
+        document.getElementById('apiTokenValue').textContent = d.api_token;
+        document.getElementById('apiTokenCopyBtn').style.display = 'inline-block';
+        document.getElementById('apiTokenCopyBtn').onclick = () => {
+          navigator.clipboard.writeText(d.api_token); toast('Copied', 'success');
+        };
+        toast('Token generated', 'success');
+      }
+    });
+    document.getElementById('apiTokenRevokeBtn').addEventListener('click', async () => {
+      await fetch('/api/auth/apitoken/revoke', {method:'POST'});
+      document.getElementById('apiTokenDisplay').style.display = 'none';
+      document.getElementById('apiTokenCopyBtn').style.display = 'none';
+      toast('Revoked', 'success');
+    });
+
+    // ========== AUTH UI ==========
+    let authMode = 'login';
+    document.querySelectorAll('.auth-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        authMode = tab.dataset.mode;
+        document.getElementById('authTitle').textContent = authMode === 'login' ? 'Login' : 'Register';
+        document.getElementById('authSub').textContent = authMode === 'login' ? 'Sign in to use ATX Pastebin' : 'Create an account';
+        document.getElementById('authSubmit').textContent = authMode === 'login' ? 'Login' : 'Register';
+        document.getElementById('authRef').style.display = authMode === 'register' ? 'block' : 'none';
+        document.getElementById('authError').style.display = 'none';
+      });
+    });
+    document.getElementById('authSubmit').addEventListener('click', async () => {
+      const username = document.getElementById('authUser').value.trim();
+      const password = document.getElementById('authPass').value;
+      const ref = document.getElementById('authRef').value.trim();
+      const err = document.getElementById('authError');
+      err.style.display = 'none';
+      if (!username || !password) { err.textContent = 'Fill in both fields'; err.style.display = 'block'; return; }
+      const url = authMode === 'login' ? '/api/auth/login' : '/api/auth/register';
+      const body = { username, password };
+      if (authMode === 'register' && ref) body.ref = ref;
+      try {
+        const r = await fetch(url, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+        const d = await r.json();
+        if (!d.success) { err.textContent = d.error || 'Error'; err.style.display = 'block'; return; }
+        currentUser = d.user;
+        if (d.csrf_token) window.ATX.csrf = d.csrf_token;
+        updateUserChip(); updateAdminVisibility();
+        document.getElementById('authUser').value = '';
+        document.getElementById('authPass').value = '';
+        document.getElementById('authRef').value = '';
+        enterPastebin();
+        toast('Welcome, ' + d.user.username, 'success');
+      } catch (e) { err.textContent = 'Network error'; err.style.display = 'block'; }
+    });
+
+    // ========== PASTEBIN ==========
+    function handlePastebinNav() {
+      showView('pastebin');
+      if (currentUser) enterPastebin(); else showPasteAuth();
+    }
+    function showPasteAuth() {
+      document.getElementById('pasteAuth').style.display = 'block';
+      document.getElementById('pasteMain').style.display = 'none';
+    }
+    function enterPastebin() {
+      document.getElementById('pasteAuth').style.display = 'none';
+      document.getElementById('pasteMain').style.display = 'block';
+      document.getElementById('pasteUser').textContent = currentUser.username;
+      switchPasteTab('new');
+    }
+    function switchPasteTab(name) {
+      document.querySelectorAll('#view-pastebin .paste-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+      document.getElementById('pastePanelNew').style.display = name === 'new' ? 'block' : 'none';
+      document.getElementById('pastePanelMine').style.display = name === 'mine' ? 'block' : 'none';
+      document.getElementById('pastePanelRecent').style.display = name === 'recent' ? 'block' : 'none';
+      document.getElementById('pastePanelSearch').style.display = name === 'search' ? 'block' : 'none';
+      if (name === 'mine') loadMyPastes();
+      if (name === 'recent') loadRecentPastes();
+    }
+    document.querySelectorAll('#view-pastebin .paste-tab').forEach(t => {
+      t.addEventListener('click', () => switchPasteTab(t.dataset.tab));
+    });
+
+    // live preview
+    const pasteContentEl = document.getElementById('pasteContent');
+    const pastePreviewEl = document.querySelector('#pastePreview code');
+    const pasteSyntaxEl = document.getElementById('pasteSyntax');
+    let previewTimer = null;
+    function updatePreview() {
+      clearTimeout(previewTimer);
+      previewTimer = setTimeout(() => {
+        pastePreviewEl.textContent = pasteContentEl.value.slice(0, 5000);
+        pastePreviewEl.className = 'language-' + pasteSyntaxEl.value;
+        try { hljs.highlightElement(pastePreviewEl); } catch(e) {}
+      }, 200);
+    }
+    pasteContentEl.addEventListener('input', updatePreview);
+    pasteSyntaxEl.addEventListener('change', updatePreview);
+
+    document.getElementById('pasteCreateBtn').addEventListener('click', async () => {
+      const content = pasteContentEl.value;
+      const title = document.getElementById('pasteTitle').value.trim();
+      const syntax = pasteSyntaxEl.value;
+      const expiry = document.getElementById('pasteExpiry').value;
+      const password = document.getElementById('pastePassword').value;
+      const err = document.getElementById('pasteError');
+      err.style.display = 'none';
+      if (!content.trim()) { err.textContent = 'Content required'; err.style.display = 'block'; return; }
+      const btn = document.getElementById('pasteCreateBtn');
+      btn.disabled = true; btn.textContent = 'Creating...';
+      try {
+        const r = await fetch('/api/paste/create', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content,title,syntax,expiry,password})});
+        const d = await r.json();
+        if (!d.success) { err.textContent = d.error || 'Error'; err.style.display = 'block'; return; }
+        pasteContentEl.value = ''; document.getElementById('pasteTitle').value = ''; document.getElementById('pastePassword').value = '';
+        document.getElementById('pasteResult').style.display = 'block';
+        const base = location.origin;
+        document.getElementById('pasteResultUrl').textContent = base + d.url;
+        document.getElementById('pasteResultRawUrl').textContent = base + d.raw_url;
+        document.getElementById('pasteResultShortUrl').textContent = base + d.short_url;
+        const wire = (id, val) => {
+          const el = document.getElementById(id);
+          el.onclick = () => { navigator.clipboard.writeText(val); toast('Copied', 'success'); };
+        };
+        wire('pasteResultCopy', base + d.url);
+        wire('pasteResultRawCopy', base + d.raw_url);
+        wire('pasteResultShortCopy', base + d.short_url);
+        toast('Paste created', 'success');
+      } catch (e) { err.textContent = 'Network error'; err.style.display = 'block'; }
+      finally { btn.disabled = false; btn.textContent = 'Create Paste'; }
+    });
+
+    async function loadMyPastes() {
+      const list = document.getElementById('pasteMineList');
+      list.innerHTML = '<div class="paste-empty">Loading...</div>';
+      const r = await fetch('/api/paste/mine');
+      const d = await r.json();
+      if (!d.success || !d.pastes.length) { list.innerHTML = '<div class="paste-empty">No pastes yet.</div>'; return; }
+      list.innerHTML = d.pastes.map(p => pasteItemHTML(p, true)).join('');
+      bindPasteItems(list);
+    }
+    async function loadRecentPastes() {
+      const list = document.getElementById('pasteRecentList');
+      list.innerHTML = '<div class="paste-empty">Loading...</div>';
+      const r = await fetch('/api/paste/recent');
+      const d = await r.json();
+      if (!d.success || !d.pastes.length) { list.innerHTML = '<div class="paste-empty">No pastes yet.</div>'; return; }
+      list.innerHTML = d.pastes.map(p => pasteItemHTML(p, false)).join('');
+      bindPasteItems(list);
+    }
+    document.getElementById('pasteSearchInput').addEventListener('input', debounce(async function() {
+      const q = this.value.trim();
+      const list = document.getElementById('pasteSearchList');
+      if (!q) { list.innerHTML = ''; return; }
+      const r = await fetch('/api/paste/search?q=' + encodeURIComponent(q));
+      const d = await r.json();
+      if (!d.pastes.length) { list.innerHTML = '<div class="paste-empty">No matches</div>'; return; }
+      list.innerHTML = d.pastes.map(p => pasteItemHTML(p, false)).join('');
+      bindPasteItems(list);
+    }, 300));
+
+    function debounce(fn, ms) {
+      let t;
+      return function(...a) { clearTimeout(t); t = setTimeout(() => fn.apply(this, a), ms); };
+    }
+
+    function pasteItemHTML(p, owned) {
+      const created = p.created ? new Date(p.created * 1000).toLocaleString() : '';
+      const lock = p.has_password ? '🔒 ' : '';
+      return `
+        <div class="paste-item" data-id="${p.id}">
+          <div class="paste-item-main">
+            <div class="paste-item-title">${lock}${escapeHtml(p.title || '(untitled)')}</div>
+            <div class="paste-item-meta">by ${escapeHtml(p.username || 'anon')} • ${p.views || 0} views • ${created}</div>
+          </div>
+          <div class="paste-item-actions">
+            <button class="btn-small paste-open">Open</button>
+            <button class="btn-small paste-raw">Raw</button>
+            ${owned ? '<button class="btn-small paste-del" style="background:#2a0a0a;color:#f55;">Delete</button>' : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    function bindPasteItems(root) {
+      root.querySelectorAll('.paste-item').forEach(item => {
+        const id = item.dataset.id;
+        item.querySelector('.paste-open').onclick = () => openPasteView(id);
+        item.querySelector('.paste-raw').onclick = () => window.open('/raw/' + id, '_blank');
+        const del = item.querySelector('.paste-del');
+        if (del) del.onclick = async () => {
+          if (!confirm('Delete?')) return;
+          await fetch('/api/paste/delete/' + id, {method:'POST'});
+          toast('Deleted', 'success');
+          loadMyPastes();
+        };
+      });
+    }
+
+    // ========== PASTE VIEW ==========
+    let currentPaste = null;
+    async function openPasteView(pid, pw) {
+      showView('paste-view');
+      document.getElementById('pvTitle').textContent = 'Loading...';
+      document.getElementById('pvMeta').textContent = '';
+      document.getElementById('pvContent').textContent = 'Loading...';
+      document.getElementById('pvRawUrl').textContent = location.origin + '/raw/' + pid;
+      document.getElementById('pvLocked').style.display = 'none';
+      document.getElementById('pvBody').style.display = 'block';
+      const q = pw ? '?pw=' + encodeURIComponent(pw) : '';
+      try {
+        const r = await fetch('/api/paste/get/' + pid + q);
+        const d = await r.json();
+        if (d.locked) {
+          document.getElementById('pvLocked').style.display = 'block';
+          document.getElementById('pvBody').style.display = 'none';
+          document.getElementById('pvUnlockBtn').onclick = () => {
+            const p = document.getElementById('pvPassword').value;
+            if (p) openPasteView(pid, p);
+          };
+          return;
+        }
+        if (!d.success) {
+          document.getElementById('pvTitle').textContent = 'Not found';
+          document.getElementById('pvContent').textContent = d.error || 'Error';
+          return;
+        }
+        currentPaste = d;
+        document.getElementById('pvTitle').textContent = d.title || '(untitled)';
+        const created = d.created ? new Date(d.created*1000).toLocaleString() : '';
+        document.getElementById('pvMeta').textContent = `by ${d.username} • ${d.views} views (${d.unique_views} unique) • ${created}`;
+        document.getElementById('pvRawUrl').textContent = location.origin + '/raw/' + pid + (pw ? '?pw='+encodeURIComponent(pw) : '');
+        const code = document.getElementById('pvContent');
+        code.textContent = d.content;
+        code.className = 'language-' + (d.syntax || 'text');
+        try { hljs.highlightElement(code); } catch(e){}
+        document.getElementById('pvCopy').onclick = () => { navigator.clipboard.writeText(d.content); toast('Copied', 'success'); };
+        document.getElementById('pvRaw').onclick = () => window.open('/raw/' + pid, '_blank');
+        document.getElementById('pvRawCopy').onclick = () => { navigator.clipboard.writeText(location.origin + '/raw/' + pid); toast('Copied', 'success'); };
+        document.getElementById('pvFork').onclick = async () => {
+          const r = await fetch('/api/paste/fork/' + pid, {method:'POST'});
+          const dd = await r.json();
+          if (dd.success) { toast('Forked: ' + dd.id, 'success'); openPasteView(dd.id); }
+          else toast(dd.error || 'Error', 'error');
+        };
+        // edit/delete if owner or admin
+        const mine = currentUser && (currentUser.is_admin || (d.username === currentUser.username));
+        document.getElementById('pvEdit').style.display = mine ? 'inline-block' : 'none';
+        document.getElementById('pvDelete').style.display = mine ? 'inline-block' : 'none';
+        document.getElementById('pvDelete').onclick = async () => {
+          if (!confirm('Delete?')) return;
+          await fetch('/api/paste/delete/' + pid, {method:'POST'});
+          toast('Deleted', 'success'); showView('pastebin'); handlePastebinNav();
+        };
+        document.getElementById('pvEdit').onclick = async () => {
+          const newTitle = prompt('New title:', d.title || '');
+          if (newTitle === null) return;
+          const newContent = prompt('Edit content (long):', d.content);
+          if (newContent === null) return;
+          const r = await fetch('/api/paste/edit/' + pid, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title:newTitle,content:newContent})});
+          const dd = await r.json();
+          if (dd.success) { toast('Saved', 'success'); openPasteView(pid, pw); }
+          else toast(dd.error || 'Error', 'error');
+        };
+      } catch (e) {
+        document.getElementById('pvContent').textContent = 'Network error';
+      }
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    // ========== KEY FLOW ==========
+    (function(){
+      const $ = id => document.getElementById(id);
+      $('keyJoinBtn').addEventListener('click', function(){
+        this.style.display = 'none';
+        $('keyCool1').style.display = 'block';
+        $('keyStatus1').textContent = 'Waiting...';
+        $('keyStatus1').className = 'step-status waiting';
+        runCooldown(30000,
+          p => $('keyFill1').style.width = p + '%',
+          s => $('keyCoolText1').textContent = 'Wait ' + s + 's...',
+          () => {
+            $('keyStatus1').textContent = 'Completed';
+            $('keyStatus1').className = 'step-status done';
+            $('keyStep2').classList.remove('disabled');
+            $('keyStatus2').textContent = 'Ready';
+            $('keyStatus2').className = 'step-status ready';
+          });
+      });
+      $('keyStartVerify').addEventListener('click', async () => {
+        $('keyStartVerify').style.display = 'none';
+        $('keyCaptchaBox').style.display = 'block';
+        await loadChallenge('keyCaptchaQuestion','keyCaptchaInput','keyCaptchaError');
+      });
+      $('keyNewChallenge').addEventListener('click', () => loadChallenge('keyCaptchaQuestion','keyCaptchaInput','keyCaptchaError'));
+      $('keyCaptchaSubmit').addEventListener('click', async () => {
+        await submitChallenge('keyCaptchaInput','keyCaptchaSubmit','keyCaptchaError','keyCaptchaQuestion', () => {
+          $('keyCaptchaBox').style.display = 'none';
+          $('keyCool2').style.display = 'block';
+          $('keyStatus2').textContent = 'Verifying...';
+          $('keyStatus2').className = 'step-status waiting';
+          runCooldown(30000,
+            p => $('keyFill2').style.width = p + '%',
+            s => $('keyCoolText2').textContent = 'Wait ' + s + 's...',
+            () => {
+              $('keyStatus2').textContent = 'Verified';
+              $('keyStatus2').className = 'step-status done';
+              $('keyStep3').classList.remove('disabled');
+              $('keyStatus3').textContent = 'Ready';
+              $('keyStatus3').className = 'step-status ready';
+              $('keyGenBtn').disabled = false;
+            });
+        });
+      });
+      $('keyCaptchaInput').addEventListener('keydown', e => { if (e.key === 'Enter') $('keyCaptchaSubmit').click(); });
+      $('keyGenBtn').addEventListener('click', async function(){
+        const btn = this; btn.disabled = true; btn.textContent = 'Generating...';
+        $('keyError').style.display = 'none';
+        try {
+          const r = await fetch('/api/generate-key', {method:'POST'});
+          const d = await r.json();
+          if (!d.success) { $('keyError').textContent = d.error || 'Error'; $('keyError').style.display = 'block'; btn.textContent='Generate Key'; btn.disabled=false; return; }
+          $('keyValue').textContent = d.key;
+          $('keyDisplay').style.display = 'block';
+          $('keyNote').textContent = `Tier: ${d.tier} • Expires in ${d.expires_in_hours}h`;
+          $('keyStatus3').textContent = 'Complete';
+          $('keyStatus3').className = 'step-status done';
+          btn.style.display = 'none';
+          toast('Key generated', 'success');
+        } catch (e) { $('keyError').textContent = 'Network error'; $('keyError').style.display = 'block'; btn.textContent='Generate Key'; btn.disabled=false; }
+      });
+      $('keyCopyBtn').addEventListener('click', function(){
+        navigator.clipboard.writeText($('keyValue').textContent).then(() => { toast('Copied', 'success'); });
+      });
+    })();
+
+    // ========== SCRIPT FLOW ==========
+    (function(){
+      const $ = id => document.getElementById(id);
+      $('scJoinBtn').addEventListener('click', function(){
+        this.style.display = 'none';
+        $('scCool1').style.display = 'block';
+        $('scStatus1').textContent = 'Waiting...';
+        $('scStatus1').className = 'step-status waiting';
+        runCooldown(30000,
+          p => $('scFill1').style.width = p + '%',
+          s => $('scCoolText1').textContent = 'Wait ' + s + 's...',
+          () => {
+            $('scStatus1').textContent = 'Completed';
+            $('scStatus1').className = 'step-status done';
+            $('scStep2').classList.remove('disabled');
+            $('scStatus2').textContent = 'Ready';
+            $('scStatus2').className = 'step-status ready';
+          });
+      });
+      $('scStartVerify').addEventListener('click', async () => {
+        $('scStartVerify').style.display = 'none';
+        $('scCaptchaBox').style.display = 'block';
+        await loadChallenge('scCaptchaQuestion','scCaptchaInput','scCaptchaError');
+      });
+      $('scNewChallenge').addEventListener('click', () => loadChallenge('scCaptchaQuestion','scCaptchaInput','scCaptchaError'));
+      $('scCaptchaSubmit').addEventListener('click', async () => {
+        await submitChallenge('scCaptchaInput','scCaptchaSubmit','scCaptchaError','scCaptchaQuestion', () => {
+          $('scCaptchaBox').style.display = 'none';
+          $('scCool2').style.display = 'block';
+          $('scStatus2').textContent = 'Verifying...';
+          $('scStatus2').className = 'step-status waiting';
+          runCooldown(30000,
+            p => $('scFill2').style.width = p + '%',
+            s => $('scCoolText2').textContent = 'Wait ' + s + 's...',
+            () => {
+              $('scStatus2').textContent = 'Verified';
+              $('scStatus2').className = 'step-status done';
+              $('scStep3').classList.remove('disabled');
+              $('scStatus3').textContent = 'Ready';
+              $('scStatus3').className = 'step-status ready';
+              $('scGenBtn').disabled = false;
+            });
+        });
+      });
+      $('scCaptchaInput').addEventListener('keydown', e => { if (e.key === 'Enter') $('scCaptchaSubmit').click(); });
+      $('scGenBtn').addEventListener('click', async function(){
+        const btn = this; btn.disabled = true; btn.textContent = 'Generating...';
+        $('scError').style.display = 'none';
+        try {
+          const r = await fetch('/api/generate-script', {method:'POST'});
+          const d = await r.json();
+          if (!d.success) { $('scError').textContent = d.error || 'Error'; $('scError').style.display = 'block'; btn.textContent='Generate Script'; btn.disabled=false; return; }
+          $('scPayload').textContent = d.payload;
+          $('scDisplay').style.display = 'block';
+          $('scStatus3').textContent = 'Complete';
+          $('scStatus3').className = 'step-status done';
+          btn.style.display = 'none';
+          toast('Script ready', 'success');
+        } catch (e) { $('scError').textContent = 'Network error'; $('scError').style.display = 'block'; btn.textContent='Generate Script'; btn.disabled=false; }
+      });
+      $('scCopyBtn').addEventListener('click', function(){
+        navigator.clipboard.writeText($('scPayload').textContent).then(() => { toast('Copied', 'success'); });
+      });
+    })();
+
+    // ========== HELPERS ==========
+    function runCooldown(duration, onTick, onSec, onDone) {
+      const start = Date.now();
+      const timer = setInterval(() => {
+        const elapsed = Date.now() - start;
+        const remaining = Math.max(0, duration - elapsed);
+        onTick(Math.min(100, (elapsed/duration)*100));
+        onSec(Math.ceil(remaining/1000));
+        if (elapsed >= duration) { clearInterval(timer); onDone(); }
+      }, 100);
+    }
+    async function loadChallenge(qId,iId,eId) {
+      const q = document.getElementById(qId), i = document.getElementById(iId), e = document.getElementById(eId);
+      q.textContent = 'Loading...'; e.style.display='none'; i.value=''; i.disabled=false;
+      try {
+        const r = await fetch('/api/get-challenge', {method:'POST'});
+        const d = await r.json();
+        if (!d.success) { q.textContent = 'Error loading'; return; }
+        q.textContent = d.question; i.focus();
+      } catch (err) { q.textContent = 'Network error'; }
+    }
+    async function submitChallenge(iId,bId,eId,qId,onSuccess) {
+      const input = document.getElementById(iId), btn = document.getElementById(bId), err = document.getElementById(eId);
+      const answer = input.value.trim();
+      if (!answer) { err.textContent='Enter your answer'; err.style.display='block'; return; }
+      btn.disabled = true; btn.textContent = 'Checking...'; err.style.display='none';
+      try {
+        const r = await fetch('/api/verify-human', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({answer})});
+        const d = await r.json();
+        if (!d.success) {
+          err.textContent = d.error || 'Wrong answer'; err.style.display='block';
+          btn.disabled=false; btn.textContent='Submit';
+          setTimeout(()=>loadChallenge(qId,iId,eId), 800);
+          return;
+        }
+        onSuccess();
+      } catch (e) { err.textContent='Network error'; err.style.display='block'; btn.disabled=false; btn.textContent='Submit'; }
+    }
+
+    // ========== HASH ROUTING ==========
+    function checkHash() {
+      const m = location.hash.match(/^#paste\/(.+)$/);
+      if (m) openPasteView(m[1]);
+    }
+    window.addEventListener('hashchange', checkHash);
+    checkHash();
+
+    // ========== PRELOAD PASTE ==========
+    if (window.ATX.preloadPasteId) {
+      openPasteView(window.ATX.preloadPasteId);
+    }
+  </script>
+</body>
+</html>
